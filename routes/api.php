@@ -8,10 +8,14 @@ Route::group(['prefix' => 'v1/account-center'], function () {
     require base_path('routes/api/v1/account_center.php');
 });
 
+Route::group(['prefix' => 'v1/post-center', 'middleware' => ['auth:sanctum']], function () {
+    require base_path('routes/api/v1/post_center.php');
+});
+
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::get('/test', function(){
+Route::get('/test', function () {
     return response()->json(['message' => 'API is working fine']);
 });
