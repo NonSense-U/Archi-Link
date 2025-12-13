@@ -4,13 +4,25 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 
-Route::group(['prefix' => 'v1/account-center'], function () {
-    require base_path('routes/api/v1/account_center.php');
+
+Route::prefix('v1')->group(function () {
+
+    Route::prefix('account-center')->group(function () {
+        require base_path('routes/api/v1/account_center.php');
+    });
+
+    Route::middleware(['auth:sanctum'])->group(function () {
+
+        Route::prefix('post-center')->group(function () {
+            require base_path('routes/api/v1/post_center.php');
+        });
+        
+        Route::prefix('user-relations')->group(function () {
+            require base_path('routes/api/v1/following_sys.php');
+        });
+    });
 });
 
-Route::group(['prefix' => 'v1/post-center', 'middleware' => ['auth:sanctum']], function () {
-    require base_path('routes/api/v1/post_center.php');
-});
 
 Route::get('/user', function (Request $request) {
     return $request->user();

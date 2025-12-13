@@ -17,10 +17,25 @@ return new class extends Migration
             END
         ");
 
+
+        //! delete followership when a user blocks another user
+        //TODO handle using kafka
+        // DB::unprepared("
+        //     CREATE TRIGGER delete_followership_after_user_block
+        //     AFTER INSERT ON user_blocks
+        //     FOR EACH ROW
+        //     BEGIN
+        //         DELETE FROM follows 
+        //         WHERE (follower_id = NEW.blocker_id AND followed_id = NEW.blocked_id)
+        //            OR (follower_id = NEW.blocked_id AND followed_id = NEW.blocker_id);
+        //     END
+        // ");
+
     }
 
     public function down(): void
     {
         DB::unprepared("DROP TRIGGER IF EXISTS delete_media_sets_after_post_delete");
+        DB::unprepared("DROP TRIGGER IF EXISTS delete_followership_after_user_block");
     }
 };

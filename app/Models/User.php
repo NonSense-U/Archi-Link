@@ -53,4 +53,34 @@ class User extends Authenticatable
     {
         return $this->hasOne(MentorProfile::class);
     }
+
+    public function followers()
+    {
+        return $this->belongsToMany(User::class, 'follows', 'followed_id', 'follower_id');
+    }
+
+    public function followings()
+    {
+        return $this->belongsToMany(User::class, 'follows', 'follower_id', 'followed_id');
+    }
+
+    public function blockedUsers()
+    {
+        return $this->hasMany(UserBlock::class, 'blocker_id');
+    }
+
+    public function blockedByUsers()
+    {
+        return $this->hasMany(UserBlock::class, 'blocked_id');
+    }
+
+    public function hasBlocked(User $user)
+    {
+        return $this->blockedUsers()->where('blocked_id', $user->id)->exists();
+    }
+
+    public function isBlockedBy(User $user)
+    {
+        return $this->blockedByUsers()->where('blocker_id', $user->id)->exists();
+    }
 }
